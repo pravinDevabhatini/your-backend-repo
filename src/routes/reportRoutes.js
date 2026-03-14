@@ -1,0 +1,11 @@
+const r = require('express').Router();
+const c = require('../controllers/reportController');
+const { protect, restrictTo } = require('../middleware/authMiddleware');
+r.use(protect);
+r.use(restrictTo('admin','superadmin','accountant'));
+r.get('/overview', c.getOverview);
+r.get('/groups',   c.getGroupReport);
+r.get('/users',    c.getUserReport);
+r.get('/cars',     c.getCarReport);
+r.get('/months',   c.getMonthReport);
+module.exports = r;

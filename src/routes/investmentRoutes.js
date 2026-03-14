@@ -1,0 +1,10 @@
+const r = require('express').Router();
+const c = require('../controllers/investmentController');
+const { protect, restrictTo } = require('../middleware/authMiddleware');
+r.use(protect);
+r.post('/assign',       restrictTo('admin'),  c.assignInvestment);
+r.post('/request',      restrictTo('user'),   c.requestInvestment);
+r.get('/requests',      restrictTo('admin'),  c.getRequests);
+r.post('/approve/:id',  restrictTo('admin'),  c.approveRequest);
+r.post('/reject/:id',   restrictTo('admin'),  c.rejectRequest);
+module.exports = r;

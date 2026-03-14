@@ -1,0 +1,11 @@
+const r = require('express').Router();
+const c = require('../controllers/depositController');
+const { protect, restrictTo } = require('../middleware/authMiddleware');
+const { uploadProof } = require('../middleware/uploadMiddleware');
+const wrap = (fn) => (req,res,next) => fn(req,res,err=>{ if(err)return res.status(400).json({error:err.message});next(); });
+r.use(protect);
+r.get('/',                restrictTo('admin','superadmin','accountant'), c.getDeposits);
+r.get('/summary',         restrictTo('admin','superadmin','accountant'), c.getSummary);
+r.get('/balance/:userId', c.getUserBalance);
+r.post('/transaction',    restrictTo('admin'), wrap(uploadProof), c.addTransaction);
+module.exports = r;

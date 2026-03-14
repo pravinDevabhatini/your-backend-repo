@@ -1,0 +1,11 @@
+const r = require('express').Router();
+const c = require('../controllers/profitController');
+const { protect, restrictTo } = require('../middleware/authMiddleware');
+const { uploadProof } = require('../middleware/uploadMiddleware');
+const wrap = (fn) => (req,res,next) => fn(req,res,err=>{ if(err)return res.status(400).json({error:err.message});next(); });
+r.use(protect);
+r.get('/',              restrictTo('admin','superadmin','accountant'), c.getAllProfits);
+r.get('/user/:userId',  c.getUserProfits);
+r.post('/sync',         restrictTo('admin','accountant'),              c.syncProfits);
+r.post('/:id/credit',   restrictTo('accountant','admin'), wrap(uploadProof), c.creditProfit);
+module.exports = r;
