@@ -1,7 +1,7 @@
 const r = require('express').Router();
 const c = require('../controllers/userController');
 const { protect, restrictTo } = require('../middleware/authMiddleware');
-r.use(protect);
+// r.use(protect);
 r.get('/',                          restrictTo('admin','superadmin','accountant'), c.getUsers);
 r.get('/:id',                       c.getUserById);
 r.post('/',                         restrictTo('admin'), c.createUser);
